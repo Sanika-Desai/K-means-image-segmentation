@@ -20,25 +20,19 @@ if uploaded_file is not None:
         img = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
     h, w, c = img.shape
 
-    # Let user pick which code to run
+    # Two options: 5 clusters or 10 clusters
     option = st.radio(
         "Select segmentation type:",
         [
             "1: 5 clusters (XY + BGR)",
-            "2: 10 clusters (XY + BGR)",
-            "3: 5 clusters with cluster centers (XY + BGR)"
+            "2: 10 clusters (XY + BGR)"
         ]
     )
 
-    if option == "Code 1: 5 clusters (XY + BGR)":
+    if option == "1: 5 clusters (XY + BGR)":
         n_clusters = 5
-        show_centers = False
-    elif option == "Code 2: 10 clusters (XY + BGR)":
+    else:  # "2: 10 clusters (XY + BGR)"
         n_clusters = 10
-        show_centers = False
-    else:  # Code 3
-        n_clusters = 5
-        show_centers = True
 
     X, Y = np.meshgrid(np.arange(w), np.arange(h))
 
@@ -53,9 +47,9 @@ if uploaded_file is not None:
     labels_with_xy = kmeans_with_xy.labels_.reshape((h, w))
     segmented_img_with_xy = labels_with_xy.astype('uint8') * int(255/(n_clusters-1))
 
-    if show_centers:
-        st.subheader("Cluster centers (B,G,R,X,Y):")
-        st.write(kmeans_with_xy.cluster_centers_)
+    # Always show cluster centres for XY
+    st.subheader("Cluster centers (B,G,R,X,Y):")
+    st.write(kmeans_with_xy.cluster_centers_)
 
     # 2. Segmentation with only BGR
     features_bgr_only = img.reshape((-1, 3))
@@ -63,9 +57,9 @@ if uploaded_file is not None:
     labels_bgr_only = kmeans_bgr_only.labels_.reshape((h, w))
     segmented_img_bgr_only = labels_bgr_only.astype('uint8') * int(255/(n_clusters-1))
 
-    if show_centers:
-        st.subheader("Cluster centers (B,G,R):")
-        st.write(kmeans_bgr_only.cluster_centers_)
+    # Always show cluster centres for BGR
+    st.subheader("Cluster centers (B,G,R):")
+    st.write(kmeans_bgr_only.cluster_centers_)
 
     st.subheader("Results:")
     col1, col2, col3 = st.columns(3)
