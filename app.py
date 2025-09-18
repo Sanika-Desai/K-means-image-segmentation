@@ -24,9 +24,9 @@ if uploaded_file is not None:
     option = st.radio(
         "Select segmentation type:",
         [
-            "Code 1: 5 clusters (XY + BGR)",
-            "Code 2: 10 clusters (XY + BGR)",
-            "Code 3: 5 clusters with cluster centers (XY + BGR)"
+            "1: 5 clusters (XY + BGR)",
+            "2: 10 clusters (XY + BGR)",
+            "3: 5 clusters with cluster centers (XY + BGR)"
         ]
     )
 
